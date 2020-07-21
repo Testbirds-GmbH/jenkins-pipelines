@@ -1,0 +1,39 @@
+import de.testbirds.PipelineConfig
+
+properties([
+	gitLabConnection('Testbirds Gitlab'),
+	pipelineTriggers([])
+	])
+
+techpipeline.pipe('master') {
+	def techConfig = new PipelineConfig([script:this,
+		rootDir: 'TestbirdsRemoteControl',
+		url:null,
+		resReleaseRepo: 'master',
+		resSnapshotRepo: 'master',
+		gradleTool: 'Gradle 4.10'
+		])
+	techConfig.configure()
+
+	techCheckoutStage {
+		configuration = techConfig
+	}
+
+	gradleStage {
+		configuration = techConfig
+		goal = "clean assembleRelease"
+	}
+
+	stage('Publish') {
+		def uploadSpec = """{
+			"files": [
+				{
+					"pattern": "TestbirdsRemoteControl/app/build/outputs/apk/release/app-release.apk",
+					"target": "grdn/master/connect/testbirds.apk",
+          			"recursive": false,
+          			"flat" : true
+        		}
+			]}"""
+		techConfig.artifactoryServer.upload(uploadSpec)
+	}
+}

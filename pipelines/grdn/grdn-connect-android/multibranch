@@ -1,0 +1,27 @@
+import de.testbirds.PipelineConfig
+
+properties([
+	buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '40', numToKeepStr: ''))
+	])
+
+techpipeline.pipe('master') {
+	def branchConfig = multibranchConfig.load()
+	def techConfig = new PipelineConfig([script:this,
+		rootDir: 'TestbirdsRemoteControl',
+		gradleTool: 'Gradle 4.10'
+		])
+	techConfig.configure()
+
+	techCheckoutStage {
+		configuration = techConfig
+	}
+	
+	gradleStage {
+		configuration = techConfig
+		goal = "clean " + branchConfig.goal
+	}
+	
+	stage('Publish') {
+		archiveArtifacts artifacts: 'TestbirdsRemoteControl/*/build/outputs/apk/*/*.apk', fingerprint: false
+	}
+}

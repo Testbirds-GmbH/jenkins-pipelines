@@ -1,0 +1,38 @@
+import de.testbirds.PipelineConfig
+
+properties([
+	buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '40', numToKeepStr: ''))
+	])
+
+techpipeline.pipe('master') {
+	def techConfig = new PipelineConfig([script:this,
+		rootDir: 'TestbirdsRemoteControl',
+		url:null,
+		resReleaseRepo: 'develop',
+		resSnapshotRepo: 'develop',
+        gradleTool: 'Gradle 4.10'
+		])
+	techConfig.configure()
+
+	techCheckoutStage {
+		configuration = techConfig
+	}
+	
+	gradleStage {
+		configuration = techConfig
+		goal = "clean assemblePremise"
+	}
+	
+	stage('Publish') {
+		def uploadSpec = """{
+			"files": [
+				{
+					"pattern": "TestbirdsRemoteControl/app/build/outputs/apk/premise/app-premise.apk",
+					"target": "grdn/premise/connect/testbirds.apk",
+					"recursive": false,
+					"flat" : true
+				}
+			]}"""
+		techConfig.artifactoryServer.upload(uploadSpec)
+	}
+}

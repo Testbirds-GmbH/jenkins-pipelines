@@ -1,0 +1,15 @@
+tech-api-tools/selenium-proxy-develop,tech-api-tools/tech-api-api-1.0.x
+tech-api-tools/selenium-proxy-cloud-develop,tech-api-tools/selenium-proxy-develop
+tech/internal-apis-spring-boot-2.0,tech-api-tools/tech-api-api-1.0.x
+tech-api-tools/selenium-server/selenium-3.11-develop,tech/internal-apis-spring-boot-2.0
+tech-api-tools/selenium-server/selenium-3.14-develop,tech/internal-apis-spring-boot-2.0
+tech/sfs-develop,tech/internal-apis-spring-boot-2.0
+tech/tech-develop,tech/sfs-develop
+tech/staging-deployment-quick,tech/tech-develop
+microservices/software-service-develop,tech/internal-apis-spring-boot-2.0
+microservices/standalone-frontend-service-develop,tech/tech-develop
+microservices/timeline-service-develop,tech/sfs-develop
+grdn/grdn-adb-forwarder/develop,grdn/grdn-common/develop
+grdn/grdn-webapi/develop,grdn/grdn-common/develop
+grdn/grdn-webapi/develop,grdn/grdn-frontend/develop
+grdn/grdn-common/develop,tech/internal-apis-spring-boot-2.0
